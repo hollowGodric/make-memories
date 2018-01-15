@@ -118,4 +118,52 @@ class OAuth2
 
         return $user;
     }
+
+    public function getGuilds(AccessToken $token)
+    {
+        $guilds = $this->queryApi($token, 'guilds');
+        dump($guilds);
+    }
+
+    /**
+     * @param AccessToken $token
+     * @param string      $endpoint
+     *
+     * @return object
+     */
+    private function queryApi(AccessToken $token, $endpoint)
+    {
+        switch ($endpoint) {
+            case 'user':
+                $scope = 'identify';
+                $url = $this->api->getUserEndpoint();
+                break;
+            case 'guilds':
+                $scope = 'guilds';
+                $url = $this->api->getGuildEndpoint();
+                break;
+            default:
+                throw new Exception();
+        }
+
+        if (strpos($token->getScope(), $scope) === false) {
+            throw new Exception('Incorrect scope');
+        }
+
+        $url .= '?' . http_build_query(
+                [
+                    self::KEY_CLIENT_ID     => $this->api->getClientId(),
+                    self::KEY_CLIENT_SECRET => $this->api->getSecret(),
+                ]
+            );
+        $options = [
+            'headers' => [
+                'Authorization' => $token->getType() . ' ' . $token->getToken()
+            ]
+        ];
+
+        $response = $this->client->get($url, $options);
+
+        return \GuzzleHttp\json_decode($response->getBody()->getContents());
+    }
 }

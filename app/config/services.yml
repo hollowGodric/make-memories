@@ -8,6 +8,7 @@ parameters:
         token_uri: '/oauth2/token'
         authenticate_uri: '/oauth2/authorize'
         user_uri: '/users/@me'
+        guild_uri: '/users/@me/guilds'
 
 services:
     # default configuration for services in *this* file

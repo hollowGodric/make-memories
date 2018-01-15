@@ -12,6 +12,7 @@ class OAuth2Api
     private $tokenUri;
     private $authUri;
     private $userUri;
+    private $guildUri;
 
     /**
      * OAuth2Api constructor.
@@ -26,6 +27,7 @@ class OAuth2Api
         $this->tokenUri = $options['token_uri'];
         $this->authUri  = $options['authenticate_uri'];
         $this->userUri  = $options['user_uri'];
+        $this->guildUri = $options['guild_uri'];
     }
 
     /**
@@ -75,5 +77,10 @@ class OAuth2Api
     public function getUserEndpoint()
     {
         return $this->baseUri . $this->userUri;
+    }
+
+    public function getGuildEndpoint()
+    {
+        return $this->baseUri . $this->guildUri;
     }
 }
