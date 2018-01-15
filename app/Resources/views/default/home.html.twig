@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if username %}
+        <img src="{{ avatar }}"/>
+        <p>Hello, {{ username }}</p>
+    {% endif %}
+    {% include 'default/login.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    <style>
+    </style>
+{% endblock %}
