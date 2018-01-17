@@ -122,7 +122,8 @@ class OAuth2
     public function getGuilds(AccessToken $token)
     {
         $guilds = $this->queryApi($token, 'guilds');
-        dump($guilds);
+
+        return $guilds;
     }
 
     /**

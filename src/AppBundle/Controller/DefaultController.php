@@ -43,11 +43,16 @@ class DefaultController extends Controller
     public function home(Request $request)
     {
         $loggedInUser = null;
+        $guilds       = [];
         $token        = $request->cookies->get(self::USER_ID);
         if ($token) {
             /** @var DiscordUserRepository $userRepository */
             $userRepository           = $this->getDoctrine()->getRepository(DiscordUser::class);
             $loggedInUser = $userRepository->getUserByToken($token);
+
+            $em          = $this->getDoctrine()->getRepository(AccessToken::class);
+            $accessToken = $em->findOneBy(['token' => $token]);
+            $guilds      = $this->OAuth2->getGuilds($accessToken);
         }
 
         if (!$loggedInUser) {
@@ -55,12 +60,16 @@ class DefaultController extends Controller
                 'login_logout_link' => $this->OAuth2->getAuthenticationUrl($request->getSchemeAndHttpHost() . self::REDIRECT_ROUTE, 'identify guilds'),
                 'login_logout_text' => 'Log in',
                 'username'          => false,
+                'guilds'            => false,
             ];
         } else {
             /** @var DiscordUser $loggedInUser */
             $vars = [
                 'username'          => $loggedInUser->getUsername(),
                 'avatar'            => $loggedInUser->getAvatarAddress(),
+                'guilds'            => array_map(function ($guild) {
+                    return $guild->name;
+                }, $guilds),
                 'login_logout_link' => $this->generateUrl('logout'),
                 'login_logout_text' => 'Log out',
             ];
@@ -91,6 +100,7 @@ class DefaultController extends Controller
         $code              = $request->get('code');
         $this->accessToken = $this->OAuth2->exchangeToken($request->getSchemeAndHttpHost() . self::REDIRECT_ROUTE, $code);
         $user              = $this->OAuth2->getUserInfo($this->accessToken);
+        $guilds            = $this->OAuth2->getGuilds($this->accessToken);
 
         $em = $this->getDoctrine()->getManager();
         $existingUser = $em->getRepository(DiscordUser::class)->findOneBy(['userid' => $user->getUserid()]);

@@ -1,0 +1,31 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.userinfo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+    font-family: "Droid Sans Mono", sans-serif;
+    background-color: #0d5aa7;
+    color: white;
+}
+
+.userinfo img {
+    height: 50px;
+}
+
+.userinfo div {
+    margin: 4px;
+}
+
+#login-link {
+    text-align: right;
+}
+
+.userinfo a {
+    font-family: inherit;
+    color: white;
+}

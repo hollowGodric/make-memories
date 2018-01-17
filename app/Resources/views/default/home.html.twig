@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <div class="userinfo">
     {% if username %}
-        <div>You are logged in as {{ username }}</div>
-        <div><img src="{{ avatar }}"/></div>
+            <img src="{{ avatar }}"/>
+            <div style="flex-grow: 10;">
+                Username: <strong>{{ username }}</strong><br/>
+                Guilds: <strong>{{ guilds|join(', ') }}</strong>
+            </div>
     {% endif %}
-    {% include 'default/login.html.twig' %}
-{% endblock %}
-
-{% block stylesheets %}
-    <style>
-    </style>
+    <div id="login-link">{% include 'default/login.html.twig' %}</div>
+    </div>
 {% endblock %}
