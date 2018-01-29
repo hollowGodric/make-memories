@@ -6,6 +6,9 @@ security:
     providers:
         in_memory:
             memory: ~
+        discord_api:
+            id: AppBundle\Authorization\OAuth2Api
+
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -22,3 +25,5 @@ security:
 
             # https://symfony.com/doc/current/security/form_login_setup.html
             #form_login: ~
+
+            provider: discord_api
