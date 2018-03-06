@@ -44,16 +44,16 @@ class DefaultController extends Controller
     {
         $loggedInUser = null;
         $guilds       = [];
-        $token        = $request->cookies->get(self::USER_ID);
+        /*$token        = $request->cookies->get(self::USER_ID);
         if ($token) {
-            /** @var DiscordUserRepository $userRepository */
+            /** @var DiscordUserRepository $userRepository *
             $userRepository           = $this->getDoctrine()->getRepository(DiscordUser::class);
             $loggedInUser = $userRepository->getUserByToken($token);
 
             $em          = $this->getDoctrine()->getRepository(AccessToken::class);
             $accessToken = $em->findOneBy(['token' => $token]);
             $guilds      = $this->OAuth2->getGuilds($accessToken);
-        }
+        }*/
 
         if (!$loggedInUser) {
             $vars = [
@@ -97,25 +97,24 @@ class DefaultController extends Controller
      */
     public function discordAction(Request $request)
     {
-        $code              = $request->get('code');
-        $this->accessToken = $this->OAuth2->exchangeToken($request->getSchemeAndHttpHost() . self::REDIRECT_ROUTE, $code);
-        $user              = $this->OAuth2->getUserInfo($this->accessToken);
-        $guilds            = $this->OAuth2->getGuilds($this->accessToken);
-
-        $em = $this->getDoctrine()->getManager();
-        $existingUser = $em->getRepository(DiscordUser::class)->findOneBy(['userid' => $user->getUserid()]);
-        $em->persist($this->accessToken);
-        if ($existingUser) {
-            $user = $existingUser;
-        } else {
-            $user->setToken($this->accessToken);
-            $em->persist($user);
-        }
-
-        $em->flush();
-
+//        $code              = $request->get('code');
+//        $this->accessToken = $this->OAuth2->exchangeToken($request->getSchemeAndHttpHost() . self::REDIRECT_ROUTE, $code);
+//        $user              = $this->OAuth2->getUserInfo($this->accessToken);
+//        $guilds            = $this->OAuth2->getGuilds($this->accessToken);
+//
+//        $em = $this->getDoctrine()->getManager();
+//        $existingUser = $em->getRepository(DiscordUser::class)->findOneBy(['userid' => $user->getUserid()]);
+//        $em->persist($this->accessToken);
+//        if ($existingUser) {
+//            $user = $existingUser;
+//        } else {
+//            $user->setToken($this->accessToken);
+//            $em->persist($user);
+//        }
+//
+//        $em->flush();
         $response = $this->redirectToRoute('home');
-        $response->headers->setCookie(new Cookie(self::USER_ID, $this->accessToken->getToken()));
+        $response->headers->setCookie(new Cookie(self::USER_ID, 9));
 
         return $response;
     }

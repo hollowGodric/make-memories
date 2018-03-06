@@ -20,4 +20,13 @@ class DiscordUserRepository extends \Doctrine\ORM\EntityRepository
                     ->getQuery()
                     ->getOneOrNullResult();
     }
+
+    public function findOneBy(array $criteria, array $orderBy = null)
+    {
+        if (count($criteria) === 1 && isset($criteria['token'])) {
+            return $this->getUserByToken($criteria['token']);
+        } else {
+            return parent::findOneBy($criteria, $orderBy);
+        }
+    }
 }

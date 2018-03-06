@@ -13,6 +13,22 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class DiscordUserProvider implements UserProviderInterface
 {
     /**
+     * @var string
+     */
+    private $redirectUrl;
+
+    /**
+     * @var OAuth2
+     */
+    private $OAuth2;
+
+    public function __construct(OAuth2 $OAuth2, string $redirectUrl)
+    {
+        $this->OAuth2      = $OAuth2;
+        $this->redirectUrl = $redirectUrl;
+    }
+
+    /**
      * Loads the user for the given username.
      *
      * This method must throw UsernameNotFoundException if the user is not
@@ -24,9 +40,11 @@ class DiscordUserProvider implements UserProviderInterface
      *
      * @throws UsernameNotFoundException if the user is not found
      */
-    public function loadUserByUsername($username)
+    public function loadUserByUsername($username): UserInterface
     {
-        // TODO: Implement loadUserByUsername() method.
+        $accessToken = $this->OAuth2->exchangeToken($this->redirectUrl, $username);
+
+        return $this->OAuth2->getUserInfo($accessToken);
     }
 
     /**
@@ -43,7 +61,7 @@ class DiscordUserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user)
     {
-        // TODO: Implement refreshUser() method.
+        return $user;
     }
 
     /**

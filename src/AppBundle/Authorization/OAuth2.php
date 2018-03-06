@@ -115,6 +115,7 @@ class OAuth2
         $user->setUsername($userInfo->username);
         $user->setDiscriminator($userInfo->discriminator);
         $user->setAvatar($userInfo->avatar);
+        $user->setToken($token);
 
         return $user;
     }

@@ -9,6 +9,7 @@ parameters:
         authenticate_uri: '/oauth2/authorize'
         user_uri: '/users/@me'
         guild_uri: '/users/@me/guilds'
+    oauth_callback_route: '/oauth'
 
 services:
     # default configuration for services in *this* file
@@ -48,3 +49,11 @@ services:
 
     AppBundle\Authorization\OAuth2Api:
         arguments: ['%discord%']
+
+    AppBundle\Security\TokenAuthenticator:
+        arguments:
+            - '@AppBundle\Authorization\OAuth2'
+            - "@=service('request_stack').getCurrentRequest().getSchemeAndHttpHost()~parameter('oauth_callback_route')"
+
+    AppBundle\Authorization\DiscordUserProvider:
+        arguments: ['@AppBundle\Authorization\OAuth2', "@=service('request_stack').getCurrentRequest().getSchemeAndHttpHost()~parameter('oauth_callback_route')"]

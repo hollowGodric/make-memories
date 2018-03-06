@@ -7,7 +7,7 @@ security:
         in_memory:
             memory: ~
         discord_api:
-            id: AppBundle\Authorization\OAuth2Api
+            id: AppBundle\Authorization\DiscordUserProvider
 
 
     firewalls:
@@ -27,3 +27,9 @@ security:
             #form_login: ~
 
             provider: discord_api
+
+            guard:
+                authenticators:
+                    - AppBundle\Security\TokenAuthenticator
+
+            #pattern: ^(?!/oauth)
